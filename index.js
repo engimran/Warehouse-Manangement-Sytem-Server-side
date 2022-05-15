@@ -48,6 +48,23 @@ async function run() {
             res.send(result);
         })
 
+        // update data
+
+        app.put('/itemsQty/:id', async (req, res) => {
+            const id = req.params.id;
+            const oldQuantity = parseInt(req.query.oldQuantity);
+            const query = { _id: ObjectId(id) };
+            const option = { upsert: true };
+            const updateQty = {
+                $set: {
+                    quantity: oldQuantity - 1
+                }
+            }
+            const result = await itemsCollection.updateOne(query, updateQty, option);
+            res.send(result)
+
+        })
+
     }
     finally {
 
