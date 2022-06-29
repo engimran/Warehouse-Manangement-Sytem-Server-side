@@ -5,7 +5,7 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.mc2fw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -18,7 +18,8 @@ async function run() {
         const itemsCollection = client.db('groceryItem').collection('itemsQty');
 
         app.get('/itemsQty', async (req, res) => {
-            const query = {};
+            const email = req.query.email;
+            const query = { email: email };
             const cursor = itemsCollection.find(query);
             const items = await cursor.toArray();
             res.send(items);
